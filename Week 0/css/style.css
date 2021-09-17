@@ -53,6 +53,9 @@ p{
     margin-bottom: 10px;
     padding: 0;
 }
+p > sub{
+    font-size: 24px;
+}
 .flex{
     display: flex;
     flex-direction: row;
@@ -66,6 +69,7 @@ p{
     height: 44px;
     border: 1px #5f6368 solid;
     margin: 0 auto;
+    padding-left: 15px;
     
 }
 
@@ -76,7 +80,7 @@ p{
     background-color: #303134;
     color: #FFFFFF;
     width: 150px;
-    /* padding: 10px; */
+    padding: 0 10px;
     display: block;
     margin: 10px;
 }
