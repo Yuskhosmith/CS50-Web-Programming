@@ -5,7 +5,7 @@ html {
     box-sizing: inherit;
 }
 body{
-    width: 90vw;
+    width: 100vw;
     color: #FFFFFF;
     background-color: #202124;
     margin: auto;
@@ -18,7 +18,7 @@ nav{
 nav > ul{
     display: flex;
     flex-direction: row;
-    margin-left: 70vw;
+    margin-left: 80vw;
 }
 
 nav > ul > li{
@@ -31,6 +31,52 @@ nav > ul > li{
 nav > ul > li > a{
     text-decoration: none;
     color: #FFFFFF;
+}
+hr{
+    color: #3c4043;
+    /* border-color: #3c4043; */
+}
+.adv{
+    margin-left: 35px;
+    color: #F28B82;
+    font-weight: bolder;
+    font-size: 20px;
+}
+.body{
+    margin: 40px 2% 0 45px;
+    width: 96%;
+
+}
+
+.f{
+    color: #Eae8ed;
+}
+label{
+    color: #BDC1C6;
+    font-size: 13px;
+    display: inline-block;
+    width: 16%;
+    height: 42px;
+}
+input{
+    padding: 1px 8px;
+    background-color: #202124;
+    border: 1px solid #BDC1C6;
+    outline: #BDC1C6;
+    width: 34%;
+    height: 24px;
+}
+
+button{
+    background-color: #8AB4F8;
+    height: 30px;
+    float: right;
+    padding: 8px;
+    margin: 10px 40%;
+    border-color: #8AB4F8;
+    border-radius: 5px;
+    outline: 0;
+    border: 0;
 }
 
 /* form{
