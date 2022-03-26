@@ -1,4 +1,7 @@
 # CS50-Web-Programming
 
-Week 0 ===> Search
-Week 1 ===> 
+## Project 0 ===> Search
+Just like google search
+
+## Project 1 ===> Wiki
+Just like Wikipedia
