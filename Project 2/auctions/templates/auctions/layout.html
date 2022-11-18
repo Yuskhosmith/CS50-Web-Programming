@@ -1,0 +1,86 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>{% block title %}Auctions{% endblock %}</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link rel="stylesheet" type="text/css" href="{% static 'auctions/styles.css' %}">
+    </head>
+    <body>
+        <h1>Auctions</h1>
+        <div>
+            {% if user.is_authenticated %}
+                Signed in as <strong>{{ user.username }}</strong>.
+            {% else %}
+                Not signed in.
+            {% endif %}
+        </div>
+        <ul class="nav">
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'index' %}">Active Listings</a>
+            </li>
+            {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <a href="{% url 'categories' %}" class="nav-link">Categories</a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'watchlist' %}" class="nav-link">Watchlist</a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'createlisting' %}" class="nav-link">Create Listing</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
+                </li>
+            {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'login' %}">Log In</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'register' %}">Register</a>
+                </li>
+            {% endif %}
+        </ul>
+        <hr>
+        {% block body %}
+        {% endblock %}
+        
+    </body>
+    <style>
+        .flex-container {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+        }
+        .flex-item {
+            margin-right: 15px;
+        }
+        .flex-item > a {
+            color: black;
+        }
+        .flex-item > a:hover {
+            color: green;
+        }
+        .item {
+            outline: 1px black solid;
+            padding: 20px;
+            margin: 5px;
+            border-radius: 5px;
+            display: flex;
+        }
+        .img-container {
+            width: 150px;
+            height: 150px;
+            margin-right: 50px;
+        }
+        .img-container > img {
+            width: 100%;
+            height: 100%;
+        }
+        .other-stuff-container{
+            width: 300px;
+            height: 50px;
+        }
+    </style>
+</html>
