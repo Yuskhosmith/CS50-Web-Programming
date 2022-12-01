@@ -143,16 +143,12 @@ class ProtectView(LoginRequiredMixin, View):
 H<sub>2</sub>O
 
 
-<marquee class='mad'>😏👻🤝🏾 #Yusuf 🤡🧑🏾‍💻🚀</marquee>
-<style>
-    .mad{
-        color: orange;
+<marquee style='color: orange;
         outline: 2px green solid;
         margin: 10px;
         padding: 10px;
-        border-radius: 5px;
-    }
-</style>
+        border-radius: 5px;' class='mad'>😏👻🤝🏾 #Yusuf 🤡🧑🏾‍💻🚀</marquee>
+
 You still don't know how to do this 😏, steal the code 👇🏾
 ```html
 <marquee class='mad'>😏👻🤝🏾 #Yusuf 🤡🧑🏾‍💻🚀</marquee>

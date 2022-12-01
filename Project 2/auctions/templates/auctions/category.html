@@ -1,0 +1,31 @@
+{% extends "auctions/layout.html" %}
+
+{% block title %}
+Category
+{% endblock %}
+
+{% block body %}
+
+{{category}}
+
+    {%for listing in listings%}
+        <div class="flex-item">
+            <a href="{% url 'listing_by_id' listing.id %}">
+                <div class="item">
+                    <div class="img-container">
+                        <img src="{{listing.img_link}}" alt="{{listing.title}}">
+                    </div>
+                    <div class="other-stuff-container">
+                        <h4>{{listing.title}}</h4>
+                        <h6>Category: {{listing.category}}</h6>
+                    
+                        <h5>Starting Bid: {{listing.starting_bid}}</h5>
+                        <p>{{listing.description}}</p>
+                    </div>
+                </div>
+                
+            </a>
+        </div>
+    {%endfor%}
+
+{% endblock %}

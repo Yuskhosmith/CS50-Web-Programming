@@ -12,36 +12,58 @@
     {% endif %}
     <h4>Category: {{listing.category}}</h4>
     <h4>Starting Bid: {{listing.starting_bid}}</h4>
-    <h4>Current Bid: {{listing.current_bid}}</h4>
+    <h4>Last Bid: {{listing.current_bid}}</h4>
     <h4>Description:</h4>
     <p>{{listing.description}}</p>
     {% if user.is_authenticated %}
-        <form action="{% url 'watchlist' %}" method="post">
-            {% csrf_token %}
-            <!-- <h2>{{x}}</h2> -->
-            {% if on_watchlist %}
-                <input class="btn btn-danger" type="submit" value="Remove from watchlist">
-                <!-- <input type="hidden" name="on_watchlist" value="True"> -->
-            {% else %}
-                <input class="btn btn-success" type="submit" value="Add to watchlist">
-                <!-- <input type="hidden" name="on_watchlist" value="False"> -->
-            {% endif %}
-            <input type="hidden" name="on_watchlist" value="{{on_watchlist}}">
-            <input type="hidden" name="listing_id" value="{{ listing.id }}">
-        </form>
-        {% if notowner%}
         
-            <form action="{% url 'listing_by_id' listing.id %}" method="post">
-                {% csrf_token %}
-                <input min="{{listing.current_bid}}" type="number" name="user_bid" value="Bid" placeholder="Place your bid">
-                <input class="btn btn-success" type="submit" value="Bid">
-            </form>
+        {% if closed %}
+            {% if notowner %}
+                <p>Congratulations {{winner}}, you have won this auction with a bid of {{bid}}</p>
+            {% else%}
+                <p>This bid has been closed. Won by {{winner}} | Bid: {{bid}}</p>
+            {% endif %}
         {% else %}
-            <form action="{% url 'listing_by_id' listing.id %}" method="post">
+            <form action="{% url 'watchlist' %}" method="post">
                 {% csrf_token %}
-                <input class="btn btn-danger" type="submit" value="Close Bid">
+                <!-- <h2>{{x}}</h2> -->
+                {% if on_watchlist %}
+                    <input class="btn btn-danger" type="submit" value="Remove from watchlist">
+                    <!-- <input type="hidden" name="on_watchlist" value="True"> -->
+                {% else %}
+                    <input class="btn btn-success" type="submit" value="Add to watchlist">
+                    <!-- <input type="hidden" name="on_watchlist" value="False"> -->
+                {% endif %}
+                <input type="hidden" name="on_watchlist" value="{{on_watchlist}}">
+                <input type="hidden" name="listing_id" value="{{ listing.id }}">
             </form>
+            {% if notowner%}
+                {% if message %}
+                    {{message}}
+                {% endif %}
+                <form action="{% url 'bid' listing.id %}" method="post">
+                    {% csrf_token %}
+                    <input min="{{min}}" type="number" name="user_bid" value="Bid" placeholder="Place your bid" required>
+                    <input class="btn btn-success" type="submit" value="Bid">
+                </form>
+            {% else %}
+                <form action="{% url 'listing_by_id' listing.id %}" method="post">
+                    {% csrf_token %}
+                    <input class="btn btn-danger" type="submit" value="Close Auction" name="close_auction">
+                </form>
+            {% endif %}
         {% endif %}
 
     {% endif %}
+    <h3>Comments</h3>
+    <form action="{% url 'comment' listing.id %}" method="post">
+        {% csrf_token %}
+        <textarea name="comment" cols="30" rows="10" placeholder="Comment here" required></textarea>
+        <input class="btn btn-primary" type="submit" value="Comment">
+    </form>
+    
+    {% for comment in comments %}
+        <h3>{{comment.user}}</h3>
+        <p>{{comment.comment}}</p>
+    {% endfor %}
 {% endblock %}
