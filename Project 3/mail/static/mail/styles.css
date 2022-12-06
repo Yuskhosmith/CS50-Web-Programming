@@ -1,0 +1,13 @@
+textarea {
+    min-height: 400px;
+}
+.one-line {
+    outline: 1px black solid;
+    padding: 5px;
+    margin-bottom: 5px;
+}
+.sp {
+    display: inline-block;
+    width: 300px;
+    margin-left: 100px;
+}
