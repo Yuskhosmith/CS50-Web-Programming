@@ -1,6 +1,6 @@
 # Hello Reader
 
-This is the third project from `CS50 Web Programming with Python and Javascript`. Yes, It is a single page mail aplication 🌚
+This is the third project from [`CS50 Web Programming with Python and Javascript`](https://learning.edx.org/course/course-v1:HarvardX+CS50W+Web/home). Yes, It is a single page mail aplication 🌚
 
 Feel free to download it and play around with it
 
@@ -29,4 +29,6 @@ password: 12345678
 
 ## Documentations
 [API](./api.md)
+
+
 [Specifications](./specifications.md)
