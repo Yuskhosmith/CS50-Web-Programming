@@ -111,18 +111,20 @@ services:
 
 To start-up these services, we'll run
 
-```
+```cmd
 docker-compose up
 ```
 
 To see the containers that are currently running:
 
-```
+```terminal
 docker ps
 ```
 
 To run a normal command on the docker container, you'll get the container id and run the ffg:
 
-```docker exec -it <containerid> bash -l```
+```powershell
+docker exec -it <containerid> bash -l
+```
 
 then you can start using normal django commands like createsuperuser, migrate etc. Then ctrl + D to logout.
