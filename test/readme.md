@@ -111,19 +111,19 @@ services:
 
 To start-up these services, we'll run
 
-```cmd
+```console
 docker-compose up
 ```
 
 To see the containers that are currently running:
 
-```terminal
+```console
 docker ps
 ```
 
 To run a normal command on the docker container, you'll get the container id and run the ffg:
 
-```powershell
+```console
 docker exec -it <containerid> bash -l
 ```
 
