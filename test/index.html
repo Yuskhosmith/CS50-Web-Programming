@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            let counter = 0;
+            document.querySelector('#increase').onclick = () => {
+                counter++;
+                document.querySelector('h1').innerHTML = counter;
+            }
+
+            document.querySelector('#decrease').onclick = () => {
+                counter--;
+                document.querySelector('h1').innerHTML = counter;
+            }
+            document.querySelector('form').onsubmit = () => {
+                const name =document.querySelector('#name').value;
+                console.log(name);
+
+                return false;
+            }
+            
+            i = 0
+            
+            document.querySelectorAll("p").forEach(elem => {
+                addvalue(elem)
+            });
+            function addvalue(elem){
+                i += 1
+                elem.innerText = i
+            }
+            console.log(i)
+            window.onscroll = () => {
+                if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+                    document.querySelector('body').style.background = 'green';
+                } else {
+                    document.querySelector('body').style.background = 'white';
+                }
+            }
+        });
+            
+    </script>
+    <style>
+        @keyframes grow {
+            /* from {
+                font-size: 2px;
+                left: 0%;
+            }
+            to {
+                font-size: 16px;
+                left: 50%;
+            } */
+            0% {
+                font-size: 2px;
+                left: 0%;
+            }
+            50% {
+                font-size: 16px;
+                left: 50%;
+            }
+            100% {
+                font-size: 32px;
+                left: 0%;
+            }
+        }
+        p {
+            position: relative;
+            animation-name: grow;
+            animation-duration: 2s;
+            animation-fill-mode: forwards;
+            /* animation-iteration-count: 2; */
+            /* animation-iteration-count: infinite; */
+        }
+    </style>
+</head>
+<body>
+    <h1>0</h1>
+    <button id="increase">+</button>
+    <button id="decrease">-</button>
+    <form>
+        <input id="name" type="text" placeholder="name">
+        <input type="submit">
+    </form>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+</body>
+</html>
