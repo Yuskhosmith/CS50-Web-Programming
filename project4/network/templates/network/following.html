@@ -1,0 +1,20 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+    {% for post in posts %}
+        <h4>{{post.user}}</h4>
+        <p>{{post.post}}</p>
+        <p>{{post.timestamp}}</p>
+        <p>Likes: 0</p>
+    {% endfor %}
+    <center>
+        {%if posts.has_previous %} {# whether the previous page exists #}
+            <a class="btn btn-primary" href="?page={{posts.previous_page_number}}">Previous</a> {# link to the prev page #}
+        {% endif %}
+        <span>{{posts.number}}</span> {# the current page number #}
+        
+        {%if posts.has_next %} {# whether the next page exists #}
+            <a class="btn btn-primary" href="?page={{posts.next_page_number}}">Next</a> {# link to the next page #}
+        {% endif %}
+    </center>
+{% endblock %}

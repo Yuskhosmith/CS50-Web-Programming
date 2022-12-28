@@ -1,0 +1,8 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+    <h2>Error</h2>
+    {% if message %}
+        <p>{{message}}</p>
+    {% endif %}
+{% endblock %}

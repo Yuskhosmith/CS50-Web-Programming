@@ -1,0 +1,47 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+    <h1>All Posts</h1>
+    {% if message %}
+        <p>{{message}}</p>
+    {% endif %}
+    {% if notLoggedInPrompt %}
+        <p>You are not logged in.</p>
+        <a href="{% url 'login' %}" class="btn btn-primary">Log In</a>
+    {% endif %}
+    {% if user.is_authenticated %}
+        <div id="new-post">
+            <h3>New Post</h3>
+            <form action="{% url 'index' %}" method="POST">
+                {% csrf_token %}
+                <textarea name="post" id="textarea" cols="30" rows="10" placeholder="Type your post here"></textarea>
+                <input id="submit" type="submit">
+            </form>
+        </div>
+    {% endif %}
+    {% for post in posts %}
+        <div id="{{post.id}}">
+            <h4>{{post.user}}</h4>
+            <div id="post-handler">
+                <!-- A tag that can display multiple lines -->
+                <article class="post">{{post.serialize.post}}</article>
+            </div>
+            <p>{{post.timestamp}}</p>
+            <button id="like">Like</button>
+            <p>Likes: 0</p>
+            {% if post.user == user %}
+                <button id="edit" class="btn btn-primary">Edit</button>
+            {% endif %}
+        </div>
+    {% endfor %}
+    <center>
+        {%if posts.has_previous %} {# whether the previous page exists #}
+            <a class="btn btn-primary" href="?page={{posts.previous_page_number}}">Previous</a> {# link to the prev page #}
+        {% endif %}
+        <span>{{posts.number}}</span> {# the current page number #}
+        
+        {%if posts.has_next %} {# whether the next page exists #}
+            <a class="btn btn-primary" href="?page={{posts.next_page_number}}">Next</a> {# link to the next page #}
+        {% endif %}
+    </center>
+{% endblock %}
