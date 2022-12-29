@@ -1,28 +1,61 @@
 {% extends "network/layout.html" %}
 
 {% block body %}
-    <h1>Profile</h1>
-    <h2 id="user">{{username}}</h2>
-    <li>Followers: {{followers}}</li>
-    <li>Following: {{following}}</li>
+    <div class="b">
+        <section class="meta">
+            <h1>Profile</h1>
+            <h2 id="user">{{username}}</h2>
+            <li>Followers: {{followers}}</li>
+            <li>Following: {{following}}</li>
+            {% if message %}
+                <p>{{message}}</p>
+            {% endif %}
+            {% if notLoggedInPrompt %}
+                <p>You are not logged in.</p>
+                <a href="{% url 'login' %}" class="btn btn-primary">Log In</a>
+            {% endif %}
+            {% if other_person %}
+                <div id="following_status"></div>
+            {% endif %}
+        </section>
 
-    {% if other_person %}
-        <div id="following_status"></div>
-    {% endif %}
+        <section class="posts">
+            <h2>Posts</h2>
+            {% for post in posts %}
+                <div class="post" id="{{post.id}}">
+                    <h4><a href="{% url 'profile' post.user %}">{{post.user}}</a></h4>
+                    <div id="post-handler">
+                        <p class="post">{{post.post}}</p>
+                    </div>
+                    <p>{{post.timestamp}}</p>
+                    {% if user.is_authenticated %}
+                        <div id="like-handler">
+                            {% if user in post.liked.all %}
+                                <a id="like" data-count="{{post.liked.all.count}}"  data-value="unlike"><i class="red fa fa-heart"></i><span id="liked{{post.id}}">{{post.liked.all.count}}</a>
+                            {% else %}
+                                <a id="like" data-count="{{post.liked.all.count}}"  data-value="like"><i class="black fa fa-heart"></i><span id="liked{{post.id}}">{{post.liked.all.count}}</a>
+                            {% endif %}
 
-    <h2>Posts</h2>
-    {% for post in posts %}
-        <h4>{{post.user}}</h4>
-        <p>{{post.post}}</p>
-    {% endfor %}
-    <center>
-        {%if posts.has_previous %} {# whether the previous page exists #}
-            <a class="btn btn-primary" href="?page={{posts.previous_page_number}}">Previous</a> {# link to the prev page #}
-        {% endif %}
-        <span>{{posts.number}}</span> {# the current page number #}
-        
-        {%if posts.has_next %} {# whether the next page exists #}
-            <a class="btn btn-primary" href="?page={{posts.next_page_number}}">Next</a> {# link to the next page #}
-        {% endif %}
-    </center>
+                        </div>
+                    {% endif %}
+                    {% if post.user == user %}
+                        <button id="edit" class="btn btn-primary">Edit</button>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </section>
+
+        <section class="pagination">
+            <center>
+                {%if posts.has_previous %} {# whether the previous page exists #}
+                    <a class="btn btn-primary" href="?page={{posts.previous_page_number}}">Previous</a> {# link to the prev page #}
+                {% endif %}
+                <span>{{posts.number}}</span> {# the current page number #}
+                
+                {%if posts.has_next %} {# whether the next page exists #}
+                    <a class="btn btn-primary" href="?page={{posts.next_page_number}}">Next</a> {# link to the next page #}
+                {% endif %}
+            </center>
+        </section>
+    </div>
 {% endblock %}

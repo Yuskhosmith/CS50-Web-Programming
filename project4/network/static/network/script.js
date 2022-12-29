@@ -3,93 +3,110 @@ document.addEventListener("DOMContentLoaded", () => {
     followingStatus()
     editPost()
     like()
+    if (document.querySelector('#username')){
+        removeSpace();
+    }
     
 });
 
-function index(){
-    fetch(`/emails/${mailbox}`)
-    .then(response => response.json())
-    .then(posts => {})
+function removeSpace(){
+    const usernameEl = document.querySelector('#username');
+    const u_er = document.querySelector('#u-er');
+    u_er.style.display = 'none';
+    
+    usernameEl.onkeyup = () => {
+        if (usernameEl.value.includes(' ')){
+            u_er.innerText = "username can't contain space";
+            u_er.style.display = 'block';
+            document.querySelector('#btnforreg').disabled = true;
+        } else {
+            u_er.style.display = 'none';
+            document.querySelector('#btnforreg').disabled = false;
+        }
 
+    }
+    
 }
 
 function like(){
-    likeBtn = document.querySelector('#like');
-    // find a better way to get all the btn to work with the event listener isntead of the first one only
-    // for btn in likeBtn{
+    likeBtn = document.querySelectorAll('#like');
+    likeBtn.forEach(item => {
+        item.addEventListener('click', () => {
+            console.log("click")
+            parentLikeBtn = item.parentElement.parentElement;
+            likeCountParent = parentLikeBtn.children[4];
+            // likeCountEl = likeCountParent.querySelector('#count');
+            post_id = parentLikeBtn.id
 
-    // }
-    likeBtn.addEventListener('click', () => {
-        parentLikeBtn = likeBtn.parentElement;
-        idChildNodes = parentLikeBtn.children;
-        post_id = parentLikeBtn.id
-        // text = idChildNodes[1].innerText
-        // username = idChildNodes[0].innerText
-        console.log(post_id)
-
-        // fetch('../like', {
-        //     method: 'GET',
-        //     body: JSON.stringify({
-        //         post: text,
-        //         username: username
-        //     })
-        // })
-        // .then(response => response.json())
-        // .then(answer => {
-        //     console.log(answer)
-        
-        // })
-        // Ignore above.... the deal is below
-        fetch('../like/', {
-            method: 'PUT',
-            body: JSON.stringify({
-                post: post_id,
+            oneLikeBtn = parentLikeBtn.querySelector('#like');
+            if (oneLikeBtn.dataset.value == "like"){
+                parentLikeBtn.querySelector('.fa-heart').style.color = "red";
+                console.log("Like--Pass 1")
+                oneLikeBtn.dataset.value = "unlike";
+                count = parseInt(oneLikeBtn.dataset.count) + 1
+                oneLikeBtn.dataset.count = count
+                parentLikeBtn.querySelector(`#liked${post_id}`).innerText = count
+            } else if (oneLikeBtn.dataset.value == "unlike") {
+                parentLikeBtn.querySelector('.fa-heart').style.color = "black";
+                console.log("Unlike--Pass 1")
+                oneLikeBtn.dataset.value = "like";
+                count = parseInt(oneLikeBtn.dataset.count) - 1
+                oneLikeBtn.dataset.count = count
+                parentLikeBtn.querySelector(`#liked${post_id}`).innerText = count
+            } else{
+                return;
+            }
+            
+            fetch('../like/', {
+                method: 'PUT',
+                body: JSON.stringify({
+                    post: post_id,
+                })
             })
-        })
-        // .then(response => response.json())
-        // .then(answer => {
-        //     console.log(answer)
-        
-        // })
-    });
-}
+            // .then(response => response.json())
+            // .then(r => {
+            //     console.log(r)
+            // })
+            
+        });
 
+    })
+}
 
 function editPost(){
     if(document.querySelector('#edit')){
-        // make the edit button take the original form of the post
-        const editBtn = document.querySelector('#edit');
-        editBtn.addEventListener('click', () => {
-            parentEditBtn = editBtn.parentElement
-            idChildNodes = parentEditBtn.children
-            text = idChildNodes[1].innerText
-            idChildNodes[1].innerHTML = `
-            <textarea name="post" id="textarea2" cols="30" rows="10">${text}</textarea>
-            <button class="btn btn-primary" id="save">Save</button>
-            `
-            disableBtn("#textarea2", "#save")
-            const saveBtn = document.querySelector('#save');
-            saveBtn.addEventListener('click', () => {
-                const post = document.querySelector('#textarea2').value;
-                
-
-                console.log(post)
-                
-                fetch('../editpost/', {
-                    method: 'PUT',
-                    body: JSON.stringify({
-                        post: post,
-                        prevpost: text,
-                    })
+        const editBtn = document.querySelectorAll('#edit');
+        editBtn.forEach(item => {
+            item.addEventListener('click', () => {
+                item.style.display = 'none';
+                parentEditBtn = item.parentElement
+                post_id = parentEditBtn.id
+                idChildNodes = parentEditBtn.children
+    
+                fetch(`../getpost/${post_id}`, {method: 'GET'})
+                .then(response => response.json())
+                .then(post => {
+                    idChildNodes[1].innerHTML = `
+                    <textarea name="post" id="textarea2" cols="30" rows="10">${post.post}</textarea>
+                    <button class="btn btn-primary" id="save">Save</button>
+                    `
+                    disableBtn("#textarea2", "#save")
+                    const saveBtn = document.querySelector('#save');
+                    saveBtn.addEventListener('click', () => {
+                        const post = document.querySelector('#textarea2').value;
+                        
+                        fetch('../editpost/', {
+                            method: 'PUT',
+                            body: JSON.stringify({
+                                post_id: post_id,
+                                post: post,
+                            })
+                        })
+                        location.reload()
+                    });
                 })
-                // .then(response => response.json())
-                // .then(answer => {
-                //     console.log(answer)})
-
-                location.reload()
             });
-            
-        });
+        })
     }
 }
 
@@ -103,6 +120,12 @@ function disableBtn(inputfield, btn){
     // by default disabled
     document.querySelector(`${btn}`).disabled = true;
 
+    // check if it's not empty
+    if (document.querySelector(`${inputfield}`).value.length > 0){
+        document.querySelector(`${btn}`).disabled = false;
+    }
+
+    // now for every key the user press, even if it's backspace
     document.querySelector(`${inputfield}`).onkeyup = () => {
         // if the input field is empty disable the button
         if (document.querySelector(`${inputfield}`).value.length > 0){

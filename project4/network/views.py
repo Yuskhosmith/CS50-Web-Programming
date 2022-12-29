@@ -27,14 +27,15 @@ def paginator_handler(request, posts):
 
 def index(request):
     posts = Post.objects.all().order_by('-id')
-    print(posts[0].post)
     user_id = request.user.id
     page_obj = paginator_handler(request, posts)
     
     ctx = {'posts': page_obj}
-    # print(user_id)
+
     if user_id is None:
         ctx['notLoggedInPrompt'] = True
+
+    
     if request.method == 'POST':
         try:
             post = request.POST["post"]
@@ -47,37 +48,22 @@ def index(request):
         
     return render(request, "network/index.html", ctx)
 
-    # converting to API
-    # posts = Post.objects.all().order_by('-id')
-    # user_id = request.user.id
-    # page_obj = paginator_handler(request, posts)
-    # if user_id is None:
-    #     # ctx['notLoggedInPrompt'] = True
-    #     pass
-    # if request.method == 'POST':
-    #     try:
-    #         post = request.POST["post"]
-    #         user = User.objects.get(pk=user_id)
-    #         new_post = Post.objects.create(user=user, post=post)
-    #         new_post.save
-    #         return HttpResponseRedirect(reverse("index"))
-    #     except Exception as e:
-    #         return render(request, "network/index.html", {"message":e})
-    
-    # return JsonResponse([post.serialize() for post in page_obj], safe=False)
+def getpost(request, postId):
+    if request.method != 'GET':
+        return JsonResponse({"Error": "Get Request Only"}, status=404)
+    post = Post.objects.get(pk=postId)
+    return JsonResponse(post.serialize(), safe=False)
 
 @csrf_exempt
 def editPost(request):
-    user_id = request.user.id
     if request.method == 'PUT':
         try:
             data = json.loads(request.body)
             if data.get("post") is not None:
                 try:
+                    post_id = data["post_id"]
                     post = data["post"]
-                    prevpost = data["prevpost"]
-                    user = User.objects.get(pk=user_id)
-                    post_tb_updated = Post.objects.get(user=user, post=prevpost)
+                    post_tb_updated = Post.objects.get(id=post_id)
                     post_tb_updated.post = post
                     post_tb_updated.save()
                     return JsonResponse({"saved": "nothing went wrong."}, status=204)
@@ -97,8 +83,9 @@ def reProfile(request):
 
 
 def profile(request, username):
-    user = User.objects.get(pk=request.user.id)
-    if user.username == username:
+    user_id = request.user.id
+    if user_id is not None and User.objects.get(pk=user_id).username == username:
+        user = User.objects.get(pk=user_id)
         posts = user.posts.all().order_by('-timestamp')
         page_obj = paginator_handler(request, posts)
         followers = Following.objects.filter(following=user).count()
@@ -124,8 +111,10 @@ def profile(request, username):
                 "following": following,
                 "other_person": True
             }
+            if user_id is None:
+                ctx['notLoggedInPrompt'] = True
         except User.DoesNotExist:
-            return render(request, "network/error.html", {"message": f"{username} does not exist."})
+            return render(request, "network/error.html", {"message": f"{username} does not exist.", "next":"Usernames are case sensitive, make sure to use the correct cases for each character"})
     return render(request, "network/profile.html", ctx)
 
 @login_required
@@ -174,27 +163,6 @@ def check_following(request, username):
 def like(request):
     user_id = request.user.id
 
-    # instead of stressing over payloads of GEt request, We can use :Drum Roll: Get or Create method 
-    # if request.method == 'GET':
-    #     try:
-    #         data = json.load(request.body)
-    #         if data.get("post") is not None and data.get("username") is not None:
-    #             # Check if user has liked the post
-    #             user = User.objects.get(pk=user_id)
-    #             post = data["post"]
-    #             username = data["username"]
-    #             poster = User.objects.get(username=username)
-    #             post = Post.objects.get(user=poster, post=post)
-    #             post_liked_or_not = Like.objects.get(user=user, post=post)
-    #             if post_liked_or_not is not None:
-    #                 return JsonResponse(True, safe=False)
-    #             else:
-    #                 return JsonResponse(False, safe=False)
-    #     except Exception as e:
-    #         return JsonResponse({"error": f"something is wrong. {e}"}, status=404)
-
-
-    
     if request.method == 'PUT':
         # like or dislike
         try:
@@ -203,38 +171,20 @@ def like(request):
             if data.get("post") is not None:
                 try:
                     post_id = data["post"]
-                    print("pass 1")
                     user = User.objects.get(pk=user_id)
-                    print("pass 2")
-                    # username = User.objects.get(username=data["username"])
-                    print("pass 3")
-                    # owner = User.objects.get(username=username)
-                    # print(post_id, owner)
-                    print("pass 4")
                     post = Post.objects.get(id=post_id)
-                    print("pass 5")
                     likeObj, liked = Like.objects.get_or_create(user=user, post=post)
+                    
                     if not liked:
                         likeObj.delete()
-                    return JsonResponse({"saved": "nothing went wrong."}, status=204)
+                        post.liked.remove(user)
+                    else:
+                        post.liked.add(user)
                 except Exception as e:
                     return JsonResponse({"error": f"something is wrong. {e}"}, status=404)
-            # elif data.get("unlike") is not None:
-            #     try:
-            #         post = data["post"]
-            #         user = User.objects.get(pk=user_id)
-            #         username = User.objects.get(username=data["username"])
-            #         owner = User.objects.get(username=username)
-            #         post = Post.objects.get(user=owner, post=post)
-            #         like_post = Like.objects.get(user=user, post=post)
-            #         like_post.delete()
-            #         return JsonResponse({"saved": "nothing went wrong."}, status=204)
-            #     except Exception as e:
-            #         return JsonResponse({"error": f"something is wrong. {e}"}, status=404)
-            # return HttpResponse(status=204)
-            return JsonResponse({"saved": "2- nothing went wrong."}, status=204)
         except Exception as e:
             return render(request, "network/index.html", {"message":e})
+        return JsonResponse({"saved": "nothing went wrong."}, status=204)
     return HttpResponseRedirect(index)
 
 @csrf_exempt
